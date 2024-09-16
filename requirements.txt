@@ -1,5 +1,7 @@
 python-dotenv
 pandas
+beautifulsoup4
+langchain_core
 secure-smtplib
 gspread
 google-auth
