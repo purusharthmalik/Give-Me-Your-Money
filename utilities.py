@@ -56,7 +56,18 @@ def extractor(data):
             - Sector
             - Summary
             - Amount
-        If you are unsure of the value in a particular field, just generate a <None> token.
+        If you are unsure of the value in a particular field, just generate an empty token('').
+        Whenever you are unsure about the company's sector, look at the summary to figure out the sector.
+        Only give the JSON output in the completion.
+        
+        Example:
+        {{
+             "company_name": "Google",
+             "sector": "Technology",
+             "summary": "Google is a global technology company specializing in internet-related services, including search, advertising, cloud computing, and software, known for its dominant search engine and innovations in AI.",
+             "amount": "$100M"
+        }}
+        
         {format_instructions}
         Extract the fields from the following data: {data}
     """
@@ -67,9 +78,20 @@ def extractor(data):
         input_variables=['data'],
         partial_variables={'format_instructions': parser.get_format_instructions()}
     )
-    chain = prompt | llm | parser
-    response = chain.invoke({'data': data})
-    return response
+    try:
+        chain = prompt | llm | parser
+        response = chain.invoke({'data': data})
+        return response
+    except Exception as e:
+        print(e)
+        return '''
+            {
+             "company_name": "",
+             "sector": "",
+             "summary": "",
+             "amount": ""
+            }
+        '''
 
 if __name__ == '__main__':
     with open('content.txt') as f:

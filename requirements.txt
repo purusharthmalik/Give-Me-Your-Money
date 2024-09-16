@@ -1,3 +1,5 @@
 python-dotenv
 pandas
-pyhunter
+secure-smtplib
+gspread
+google-auth
